@@ -32,11 +32,17 @@ class Game:
         # display score elements
         self.font=pg.font.Font('assets/font.ttf',24)
         self.score_text=self.font.render(f"Score:{self.score}",True,(255,255,255))
-        self.score_text_rect=self.score_text.get_rect(center=(300,50))
+        self.score_text_rect=self.score_text.get_rect(center=(300,100))
 
         # restart button
         self.restart=self.font.render("RESTART",True,(0,0,0))
         self.restart_rect=self.restart.get_rect(center=(300,650))
+
+        # display highscore
+        self.highScore=[0]
+        self.highScore1=self.highScore[0]
+        self.highScore_text=self.font.render(f"High Score:{self.highScore1}",True,(0,255,0))
+        self.highScore_text_rect=self.highScore_text.get_rect(center=(300,50))
 
         self.gameLoop()
 
@@ -71,7 +77,19 @@ class Game:
             pg.display.update()
             self.clock.tick(60)
 
+    def checkHighScore(self):
+        self.highScore.append(self.score)
+        if self.highScore:
+            self.highScore.sort()
+            if len(self.highScore)>1:
+                for i in range(len(self.highScore)-1):
+                    self.highScore.pop(0)
+            self.highScore1=self.highScore[0]
+            self.highScore_text=self.font.render(f"High Score:{self.highScore1}",True,(0,255,0))
+            self.highScore_text_rect=self.highScore_text.get_rect(center=(300,50))
+
     def restartGame(self):
+        self.checkHighScore()
         self.score=0
         self.score_text=self.font.render(f"Score:{self.score}",True,(255,255,255))
         self.is_enter_pressed=False
@@ -92,7 +110,9 @@ class Game:
         self.win.blit(self.grnd_img1,self.grnd_img1_rect)
         self.win.blit(self.grnd_img2,self.grnd_img2_rect)
         self.win.blit(self.bird.image,self.bird.rect)
+        self.win.blit(self.highScore_text,self.highScore_text_rect)
         self.win.blit(self.score_text,self.score_text_rect)
+
         
         if not self.is_game_started:
             self.win.blit(self.restart,self.restart_rect)
