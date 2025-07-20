@@ -6,6 +6,8 @@ A fully functional clone of the classic Flappy Bird game, built using **Python**
 
 ## 🎮 Gameplay Preview
 
+▶️ [Watch Gameplay Video](assets/demo.mp4)
+
 > _You can add a `.gif` or `.mp4` file here once available._
 
 ---
@@ -88,7 +90,7 @@ Here are some features I may consider adding next:
 
 ## 🧩 Project Structure
 
---plaintext
+```plaintext
 
 Flappy-bird/
 ├── assets/ # Game assets: sprites, background, ground
@@ -111,3 +113,4 @@ pip install pygame
 ## Run the game:
 
 python game.py
+```
