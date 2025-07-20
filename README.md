@@ -104,6 +104,8 @@ Flappy-bird/
 ├── game.py # Game loop and main mechanics
 └── README.md # Project documentation
 
+```
+
 ---
 
 ## Install dependencies:
@@ -115,4 +117,3 @@ pip install pygame
 ## Run the game:
 
 python game.py
-```
