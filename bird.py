@@ -37,7 +37,7 @@ class Bird(pg.sprite.Sprite):
         self.rect.y+=self.y_velocity
 
     def flap(self,dlt_time):
-        self.y_velocity=-self.flap_speed*dlt_time*1.2
+        self.y_velocity=-self.flap_speed*dlt_time*1.3
 
     def playAnimation(self):
         if self.anim_counter==6:

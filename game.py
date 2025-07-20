@@ -19,6 +19,7 @@ class Game:
         self.clock=pg.time.Clock()
         self.move_speed=200
         self.is_game_started=True
+        self.next_val=5
 
         # pipe contents
         self.pipe_list=[]
@@ -43,6 +44,8 @@ class Game:
         self.highScore1=self.highScore[0]
         self.highScore_text=self.font.render(f"High Score:{self.highScore1}",True,(0,255,0))
         self.highScore_text_rect=self.highScore_text.get_rect(center=(300,50))
+
+        self.p_distance=150
 
         self.gameLoop()
 
@@ -73,6 +76,7 @@ class Game:
             self.updateEverything(dlt_time)
             self.checkCollision()
             self.checkScore()
+            self.checkLevel()
             self.drawEverything()
             pg.display.update()
             self.clock.tick(60)
@@ -96,9 +100,20 @@ class Game:
         self.is_game_started=True
         self.bird.resetPosition()
         self.pipe_list.clear()
+        self.p_distance=150
         self.pipe_generate_counter=80
         self.bird.update_on=False
+        self.next_val=5
 
+    def checkLevel(self):
+        if self.score >= self.next_val:
+            self.p_distance = max(90, self.p_distance - 20)  # limit minimum distance
+            self.next_val += 5
+        # if self.score>5:
+        #     self.score_val=self.score
+        #     if self.score_val== self.next_val:
+        #         self.p_distance-=100
+        #         self.next_val+=5
 
     def drawEverything(self):
         self.win.blit(self.bg_img,(0,-300))
@@ -139,7 +154,7 @@ class Game:
 
             # generating pipes and appending them in the pipe list
             if self.pipe_generate_counter>80:
-                self.pipe_list.append(Pipe(self.scale_factor,self.move_speed))
+                self.pipe_list.append(Pipe(self.scale_factor,self.move_speed,self.p_distance))
                 # self.d.append(1)
                 # print(self.d)
                 self.pipe_generate_counter=0
