@@ -23,6 +23,7 @@ class Bird(pg.sprite.Sprite):
         if self.update_on:
             self.playAnimation()
             self.apply_gravity(dlt_time)
+            self.rotate()
 
             if self.rect.y<=0 and self.flap_speed==250:
                 self.rect.y=0
@@ -51,3 +52,10 @@ class Bird(pg.sprite.Sprite):
         self.rect.center=(100,100)
         self.y_velocity=0
         self.anim_counter=0
+
+    def rotate(self):
+        # Limit the angle to a reasonable range
+        angle = max(min(-self.y_velocity * 5, 25), -90)  # tilt up to -90°, down to 25°
+        self.image = pg.transform.rotate(self.img_list[self.image_index], angle)
+        # Keep center consistent after rotation
+        self.rect = self.image.get_rect(center=self.rect.center)

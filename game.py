@@ -4,7 +4,11 @@ import time
 from bird import Bird
 from pipe import Pipe
 
+
 pg.init()
+
+# sounds
+
 
 class Game:
     def __init__(self):
@@ -27,6 +31,7 @@ class Game:
         
         # self.d=[]
         # score elements
+        self.dead_sound_played = False
         self.monitoring=False
         self.score=0
 
@@ -46,6 +51,12 @@ class Game:
         self.highScore_text_rect=self.highScore_text.get_rect(center=(300,50))
 
         self.p_distance=150
+        self.game_over=False
+
+        pg.mixer.init()
+        self.flap_sound=pg.mixer.Sound('assets/sfx/flap.wav')
+        self.score_sound=pg.mixer.Sound('assets/sfx/score.wav')
+        self.dead_sound=pg.mixer.Sound('assets/sfx/dead.wav')
 
         self.gameLoop()
 
@@ -68,10 +79,14 @@ class Game:
                         self.bird.update_on=True
                     if event.key==pg.K_SPACE and self.is_enter_pressed:
                         self.bird.flap(dlt_time)
+                        self.flap_sound.play()
+                        
                 if event.type==pg.MOUSEBUTTONDOWN:
                     if self.restart_rect.collidepoint(pg.mouse.get_pos()):
                         self.restartGame()
-
+                if event.type== pg.KEYDOWN and not self.is_game_started:
+                    if event.key==pg.K_RETURN:
+                        self.restartGame()
                         
             self.updateEverything(dlt_time)
             self.checkCollision()
@@ -207,6 +222,7 @@ class Game:
                 self.bird.update_on=False
                 self.is_enter_pressed=False
                 self.is_game_started=False
+                self.game_over=True
             if(self.bird.rect.colliderect(self.pipe_list[0].rect_up)
             or self.bird.rect.colliderect(self.pipe_list[0].rect_down)):
                 # if((self.bird.rect.bottom>self.pipe_list[0].rect_up.top) or (self.bird.rect.top<self.pipe_list[0].rect_down.bottom)):
@@ -214,6 +230,20 @@ class Game:
                 #     self.bird.update_on=True
                 self.is_enter_pressed=False
                 self.is_game_started=False
+                self.game_over=True
+        if self.game_over==True:
+            self.dead_sound.play()
+            self.dead_sound.fadeout(75)
+            # self.dead_sound.stop()
+            self.game_over=False
+            
+        # if not self.dead_sound_played:
+        #     self.dead_sound.play()
+        #     self.dead_sound_played = True
+        #     self.game_over = True
+        # else:
+        #     self.dead_sound_played = False
+            
                 
     def checkScore(self):
         if len(self.pipe_list)>0:
@@ -222,8 +252,15 @@ class Game:
             if (self.bird.rect.right>self.pipe_list[0].rect_up.right and self.monitoring):
                 self.monitoring=False
                 self.score+=1
+                self.score_sound.play()
                 self.score_text=self.font.render(f"Score:{self.score}",True,(255,255,255))
 
+# Add this variable at the top
+
+# Inside your game loop, where collision is checked
+
+    
+      # reset if game is still active
 
 
 game=Game()
