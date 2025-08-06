@@ -123,7 +123,7 @@ class Game:
     def checkLevel(self):
         if self.score >= self.next_val:
             self.p_distance = max(90, self.p_distance - 20)  # limit minimum distance
-            self.next_val += 5
+            self.next_val += 15
         # if self.score>5:
         #     self.score_val=self.score
         #     if self.score_val== self.next_val:
@@ -131,7 +131,8 @@ class Game:
         #         self.next_val+=5
 
     def drawEverything(self):
-        self.win.blit(self.bg_img,(0,-300))
+        self.win.blit(self.bg_img,self.bg_img_rect)
+        self.win.blit(self.bg_img2,self.bg_img2_rect)
         # self.win.blit(self.bg_img1,self.bg_img1_rect)
         # self.win.blit(self.bg_img2,self.bg_img2_rect)
         # drawing pipes
@@ -159,6 +160,7 @@ class Game:
             #     self.bg_img2_rect.x=self.bg_img1_rect.right
 
             # for moving ground
+            
             self.grnd_img1_rect.x-=int(self.move_speed*dlt_time)
             self.grnd_img2_rect.x-=int(self.move_speed*dlt_time)
 
@@ -167,8 +169,16 @@ class Game:
             if self.grnd_img2_rect.right<0:
                 self.grnd_img2_rect.x=self.grnd_img1_rect.right
 
+            self.bg_img_rect.x-=int(((self.move_speed)-40)*dlt_time)
+            self.bg_img2_rect.x-=int(((self.move_speed)-40)*dlt_time)
+
+            if self.bg_img_rect.right<0:
+                self.bg_img_rect.x=self.bg_img2_rect.right
+            if self.bg_img2_rect.right<0:
+                self.bg_img2_rect.x=self.bg_img_rect.right
+
             # generating pipes and appending them in the pipe list
-            if self.pipe_generate_counter>80:
+            if self.pipe_generate_counter>90:
                 self.pipe_list.append(Pipe(self.scale_factor,self.move_speed,self.p_distance))
                 # self.d.append(1)
                 # print(self.d)
@@ -193,14 +203,15 @@ class Game:
         # setting background & ground img
         # self.bg_img=pg.transform.scale(pg.image.load('assets/bg.png').convert(),(600,1066))
         self.bg_img=pg.transform.scale_by(pg.image.load('assets/bg.png').convert(),self.scale_factor)
+        self.bg_img2=pg.transform.scale_by(pg.image.load('assets/bg.png').convert(),self.scale_factor)
         # self.bg_img1=pg.image.load('assets/bg.png').convert()
         # self.bg_img2=pg.image.load('assets/bg.png').convert()
         self.grnd_img1=pg.transform.scale_by(pg.image.load('assets/ground.png').convert(),self.scale_factor)
         self.grnd_img2=pg.transform.scale_by(pg.image.load('assets/ground.png').convert(),self.scale_factor)
 
         # getting rectangle for bg
-        # self.bg_img1_rect=self.bg_img1.get_rect()
-        # self.bg_img2_rect=self.bg_img2.get_rect()
+        self.bg_img_rect=self.bg_img.get_rect()
+        self.bg_img2_rect=self.bg_img2.get_rect()
         # self.bg_img2_rect.x=self.bg_img1_rect.right
 
         # getting rectangle for both grnds
@@ -210,6 +221,11 @@ class Game:
         # setting ground's x location
         self.grnd_img1_rect.x=0
         self.grnd_img2_rect.x=self.grnd_img1_rect.right
+
+        self.bg_img_rect.x=0
+        self.bg_img2_rect.x=self.bg_img_rect.right
+        self.bg_img_rect.y=-300
+        self.bg_img2_rect.y=-300
 
         # setting ground's y location
         # win_y=768 ,grnd_img_height=133*1.5=199.5 so we do y_cord=768-200=568
